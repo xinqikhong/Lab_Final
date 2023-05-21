@@ -1,0 +1,21 @@
+End User License Agreement
+
+PLEASE READ THIS END USER LICENSE AGREEMENT ("AGREEMENT") CAREFULLY BEFORE USING THE APPLICATION. BY USING THE APPLICATION, YOU AGREE TO BE BOUND BY THE TERMS AND CONDITIONS OF THIS AGREEMENT.
+
+1. LICENSE GRANT
+Subject to the terms and conditions of this Agreement, the Company grants you a limited, non-exclusive, and non-transferable license to use the Application solely for your personal, non-commercial purposes. You may not modify, copy, distribute, transmit, display, perform, reproduce, publish, license, create derivative works from, transfer, or sell any information, software, products, or services obtained from the Application.
+
+2. INTELLECTUAL PROPERTY
+The Application and all related intellectual property rights are and shall remain the exclusive property of the Company. Nothing in this Agreement intends to transfer any such intellectual property rights to you.
+
+3. DISCLAIMER OF WARRANTIES
+THE APPLICATION IS PROVIDED ON AN "AS IS" AND "AS AVAILABLE" BASIS, WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED. TO THE FULLEST EXTENT PERMITTED BY LAW, THE COMPANY DISCLAIMS ALL WARRANTIES, INCLUDING BUT NOT LIMITED TO MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT OF THIRD-PARTY RIGHTS.
+
+4. LIMITATION OF LIABILITY
+IN NO EVENT SHALL THE COMPANY OR ITS AFFILIATES BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR EXEMPLARY DAMAGES ARISING OUT OF OR IN CONNECTION WITH THE USE OF THE APPLICATION, WHETHER OR NOT THE COMPANY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+
+5. GOVERNING LAW
+This Agreement shall be governed by and construed in accordance with the laws of [Insert Jurisdiction]. Any disputes arising under or in connection with this Agreement shall be subject to the exclusive jurisdiction of the courts located in [Insert Jurisdiction].
+
+By using the Application, you acknowledge that you have read, understood, and agree to be bound by the terms and conditions of this Agreement.
+
