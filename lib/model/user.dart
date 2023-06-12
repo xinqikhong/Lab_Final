@@ -1,5 +1,3 @@
-import 'package:barterit/model/user.dart';
-
 class User {
   String? id;
   String? name;

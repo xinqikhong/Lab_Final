@@ -1,4 +1,3 @@
-import 'package:barterit/view/loginscreen.dart';
 import 'package:barterit/view/splashscreen.dart';
 import 'package:flutter/material.dart';
 

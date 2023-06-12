@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:barterit/view/mainscreen.dart';
 import 'package:barterit/view/registerscreen.dart';
 import 'package:flutter/material.dart';
@@ -295,7 +294,7 @@ class _LoginScreenState extends State<LoginScreen> {
         Navigator.pushReplacement(
           context, 
           MaterialPageRoute(
-            builder: (BuildContext context) => const MainScreen(),
+            builder: (BuildContext context) => MainScreen(user: user),
           )
         );
 
