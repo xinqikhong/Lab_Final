@@ -2,31 +2,34 @@ import 'dart:convert';
 import 'package:barterit/view/mainscreen.dart';
 import 'package:barterit/view/registerscreen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
-//import 'package:progress_dialog/progress_dialog.dart';
-//import 'package:modal_progress_hud/modal_progress_hud.dart';
 import '../model/config.dart';
 import '../model/user.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+  const LoginScreen({super.key});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  late double screenHeight, screenWidth;
+  late double screenHeight, screenWidth, cardwitdh;
   final _formKey = GlobalKey<FormState>();
   final focus = FocusNode();
   final focus1 = FocusNode();
   final focus2 = FocusNode();
-  final TextEditingController _emailditingController = TextEditingController();
+  final TextEditingController _emailEditingController = TextEditingController();
   final TextEditingController _passEditingController = TextEditingController();
-  //bool _passwordVisible = true;
-  bool _showProgressIndicator = false;
+  bool _isChecked = false;
+
+  @override
+  void initState() {
+    super.initState();
+    loadPref();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +94,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         onFieldSubmitted: (v) {
                           FocusScope.of(context).requestFocus(focus1);
                           },
-                          controller: _emailditingController,
+                          controller: _emailEditingController,
                           keyboardType: TextInputType.emailAddress,
                           decoration: const InputDecoration(
                           labelStyle: TextStyle(),
@@ -145,6 +148,27 @@ class _LoginScreenState extends State<LoginScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
+                          Checkbox(
+                            //checkColor: Colors.white,
+                            //activeColor: Colors.red,
+                            value: _isChecked,
+                            onChanged: (bool? value) {
+                              saveremovepref(value!);
+                              setState(() {
+                                _isChecked = value;
+                              });
+                            },
+                          ),
+                          Flexible(
+                            child: GestureDetector(
+                              onTap: null,
+                              child: const Text('Remember Me',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  )),
+                            ),
+                          ),
                           MaterialButton(
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(5.0)),
@@ -252,14 +276,6 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _loginUser() {
-    // Make an HTTP request and handle the response
-    // Example using the http package:
-    /*ProgressDialog progressDialog = ProgressDialog(context);
-    progressDialog.style(
-      message: "Please wait..",
-    );
-  
-    progressDialog.show();*/
     if (_formKey.currentState!.validate()) {
       print("line 265");
       //return;
@@ -271,7 +287,7 @@ class _LoginScreenState extends State<LoginScreen> {
     //http.post('your_login_url' as Uri, 
     http.post(Uri.parse("${Config.server}/barterit/php/login_user.php"), 
     body: {
-      'email': _emailditingController.text,
+      'email': _emailEditingController.text,
       'password': _passEditingController.text,
     }).then((response) {
       print('Response status code: ${response.statusCode}');
@@ -345,6 +361,50 @@ class _LoginScreenState extends State<LoginScreen> {
       );
       });
     }}
+
+    void saveremovepref(bool value) async {
+      FocusScope.of(context).requestFocus(FocusNode());
+      String email = _emailEditingController.text;
+      String password = _passEditingController.text;
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      if (value) {
+        //save preference
+        if (!_formKey.currentState!.validate()) {
+          _isChecked = false;
+          return;
+        }
+        await prefs.setString('email', email);
+        await prefs.setString('pass', password);
+        await prefs.setBool("checkbox", value);
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text("Preferences Stored")));
+      } else {
+        //delete preference
+        await prefs.setString('email', '');
+        await prefs.setString('pass', '');
+        await prefs.setBool('checkbox', false);
+        setState(() {
+          _emailEditingController.text = '';
+          _passEditingController.text = '';
+          _isChecked = false;
+        });
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text("Preferences Removed")));
+      }
+  }
+
+  Future<void> loadPref() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String email = (prefs.getString('email')) ?? '';
+    String password = (prefs.getString('pass')) ?? '';
+    _isChecked = (prefs.getBool('checkbox')) ?? false;
+    if (_isChecked) {
+      setState(() {
+        _emailEditingController.text = email;
+        _passEditingController.text = password;
+      });
+    }
+  }
   
   validatePassword(String string) {}
 }

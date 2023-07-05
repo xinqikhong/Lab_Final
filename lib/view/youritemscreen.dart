@@ -24,9 +24,14 @@ class _YourItemScreenState extends State<YourItemScreen> {
   late int axiscount = 2;
   late List<Widget> tabchildren;
   List<Item> itemList = <Item>[];
-  String maintitle = "All Item";
+  String maintitle = "Owner";
+  int numofpage = 1, curpage = 1;
+  int numberofresult = 0;
+  var color;
+  
+  TextEditingController searchController = TextEditingController();
   //late List<Widget> tabchildren;
-  int _currentIndex = 0;
+
 
   @override
   Widget build(BuildContext context) {
@@ -38,9 +43,16 @@ class _YourItemScreenState extends State<YourItemScreen> {
       axiscount = 2;
     }
     return Scaffold(
-      /*appBar: AppBar(
+      appBar: AppBar(
         title: Text(maintitle),
-      ),*/
+        actions: [
+          IconButton(
+              onPressed: () {
+                showsearchDialog();
+              },
+              icon: const Icon(Icons.search)),
+        ],
+      ),
       body: itemList.isEmpty
             ? const Center(
               child: Text('No Data'),
@@ -52,7 +64,7 @@ class _YourItemScreenState extends State<YourItemScreen> {
                     color: Theme.of(context).colorScheme.primary,
                     alignment: Alignment.center,
                     child: Text(
-                      "${itemList.length} Item Found",
+                      "${_getDisplayText(itemList.length)} Found",
                       style: const TextStyle(color: Colors.white, fontSize: 18),
                     ),
                   ),
@@ -68,18 +80,18 @@ class _YourItemScreenState extends State<YourItemScreen> {
                                 onDeleteDialog(index);
                               },
                               onTap: () async {
-                                Item singlecatch =
+                                Item singleitem =
                                 Item.fromJson(itemList[index].toJson());
                                 await Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                     builder: (content) => EditItemScreen(
-                                      /*user: widget.user,
-                                      usercatch: singlecatch,*/
+                                      user: widget.user,
+                                      useritem: singleitem,
                                     )
                                   )
                                 );
-                                loadOwnerItem();
+                                loadOwnerItem(1);
                               },
                               child: Column(
                                 children: [
@@ -103,12 +115,10 @@ class _YourItemScreenState extends State<YourItemScreen> {
                                   const SizedBox(
                                     height: 5
                                   ),
-                                  /*Text(
-                                    "RM ${(itemList[index].itemValue.toString())}",
-                                    //"RM ${double.parse(itemList[index].itemValue.toString()).toStringAsFixed(2)}",
-                                    //"RM ${double.parse(itemList[index].itemValue ?? '0.0').toStringAsFixed(2)}",
+                                  Text(
+                                    "RM ${double.parse(itemList[index].itemValue.toString()).toStringAsFixed(2)}",
                                     style: const TextStyle(fontSize: 14),
-                                  ),*/
+                                  ),
                                   Text(
                                     "${itemList[index].itemLocal.toString()}, ${itemList[index].itemState.toString()}",
                                     style: const TextStyle(fontSize: 14),
@@ -120,7 +130,33 @@ class _YourItemScreenState extends State<YourItemScreen> {
                         },
                       )
                     )
-                  )
+                  ),
+                  SizedBox(
+                height: 50,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: numofpage,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) {
+                    //build the list for textbutton with scroll
+                    if ((curpage - 1) == index) {
+                      //set current page number active
+                      color = Colors.red;
+                    } else {
+                      color = Colors.black;
+                    }
+                    return TextButton(
+                        onPressed: () {
+                          curpage = index + 1;
+                          loadOwnerItem(index + 1);
+                        },
+                        child: Text(
+                          (index + 1).toString(),
+                          style: TextStyle(color: color, fontSize: 18),
+                        ));
+                  },
+                ),
+              ),
                 ]
               ),
               //],
@@ -137,6 +173,85 @@ class _YourItemScreenState extends State<YourItemScreen> {
         ],
       ),
     );
+  }
+
+  String _getDisplayText(int count) {
+    if (count == 1) {
+      return "1 Item";
+    } else {
+      return "$count Items";
+    }
+  }
+
+  void showsearchDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10.0))),
+          title: const Text(
+            "Search?",
+            style: TextStyle(),
+          ),
+          content: Column(mainAxisSize: MainAxisSize.min, children: [
+            TextField(
+                controller: searchController,
+                decoration: const InputDecoration(
+                    labelText: 'Search',
+                    labelStyle: TextStyle(),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(width: 2.0),
+                    ))),
+            const SizedBox(
+              height: 4,
+            ),
+            ElevatedButton(
+                onPressed: () {
+                  String search = searchController.text;
+                  searchItem(search);
+                  Navigator.of(context).pop();
+                },
+                child: const Text("Search"))
+          ]),
+          actions: <Widget>[
+            TextButton(
+              child: const Text(
+                "Close",
+                style: TextStyle(),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void searchItem(String search) {
+    http.post(Uri.parse("${Config.server}/barterit/php/load_item.php"),
+        body: {
+          "cartuserid": widget.user.id,
+          "search": search
+        }).then((response) {
+      //print(response.body);
+      log(response.body);
+      itemList.clear();
+      if (response.statusCode == 200) {
+        var jsondata = jsonDecode(response.body);
+        if (jsondata['status'] == "success") {
+          var extractdata = jsondata['data'];
+          extractdata['items'].forEach((v) {
+            itemList.add(Item.fromJson(v));
+          });
+          numberofresult = int.parse(jsondata['numberofresult']);
+          print(itemList[0].itemName);
+        }
+        setState(() {});
+      }
+    });
   }
 
   void _newItem() {
@@ -158,7 +273,7 @@ class _YourItemScreenState extends State<YourItemScreen> {
     );
   }
 
-  void loadOwnerItem() {
+  void loadOwnerItem(int pg) {
     if (widget.user.id == "na") {
       setState(() {
         // titlecenter = "Unregistered User";
@@ -166,15 +281,18 @@ class _YourItemScreenState extends State<YourItemScreen> {
       return;
     }
 
-    http.post(Uri.parse("${Config.server}/barterit/php/load_owneritem.php"),
+    http.post(Uri.parse("${Config.server}/barterit/php/load_item.php"),
         body: {"userid": widget.user.id}).then((response) {
       //print(response.body);
       log(response.body);
-      itemList = <Item>[];
-      //itemList.clear();
+      //itemList = <Item>[];
+      itemList.clear();
       if (response.statusCode == 200) {
         var jsondata = jsonDecode(response.body);
         if (jsondata['status'] == "success") {
+          numofpage = int.parse(jsondata['numofpage']); //get number of pages
+          numberofresult = int.parse(jsondata['numberofresult']);
+          print(numberofresult);
           var extractdata = jsondata['data'];
           if (extractdata.containsKey('items')) {
             extractdata['items'].forEach((v) {
@@ -233,7 +351,7 @@ class _YourItemScreenState extends State<YourItemScreen> {
   }
 
   void deleteItem(int index) {
-    http.post(Uri.parse("${Config.server}/berterit/php/delete_item.php"),
+    http.post(Uri.parse("${Config.server}/barterit/php/delete_item.php"),
         body: {
           "userid": widget.user.id,
           "itemid": itemList[index].itemId
@@ -245,7 +363,7 @@ class _YourItemScreenState extends State<YourItemScreen> {
         if (jsondata['status'] == "success") {
           ScaffoldMessenger.of(context)
               .showSnackBar(const SnackBar(content: Text("Delete Success")));
-          loadOwnerItem();
+          loadOwnerItem(1);
         } else {
           ScaffoldMessenger.of(context)
               .showSnackBar(const SnackBar(content: Text("Failed")));
@@ -257,7 +375,7 @@ class _YourItemScreenState extends State<YourItemScreen> {
   @override
   void initState() {
     super.initState();
-    loadOwnerItem();
+    loadOwnerItem(1);
     //print("Owner");
   }
 

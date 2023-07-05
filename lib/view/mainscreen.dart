@@ -1,4 +1,4 @@
-import 'package:barterit/view/profilescreen.dart';
+import 'package:barterit/view/profiletabscreen.dart';
 import 'package:barterit/view/youritemscreen.dart';
 import 'package:flutter/material.dart';
 import '../model/user.dart';
@@ -25,9 +25,9 @@ class _MainScreenState extends State<MainScreen> {
     print(widget.user.name);
     print("Mainscreen");
     tabchildren = [
-      const AllItemScreen(),
+      AllItemScreen(user: widget.user),
       YourItemScreen(user: widget.user),
-      const ProfileScreen(),
+      ProfileTabScreen(user: widget.user),
     ];
   }
 
@@ -40,9 +40,6 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-         title: Text(maintitle)
-      ),
       body: tabchildren[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
           onTap: onTabTapped,

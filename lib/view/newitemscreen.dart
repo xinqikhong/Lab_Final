@@ -61,30 +61,6 @@ class _NewItemScreenState extends State<NewItemScreen> {
         ),
         body: Column(
           children: [
-            /*Flexible(
-              flex: 4,
-              child: GestureDetector(
-                onTap: _selectImage,
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
-                  child: Card(
-                    child: Container(
-                      //width: screenWidth,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: _image == null
-                          ? AssetImage(pathAsset)
-                          : FileImage(_image!) as ImageProvider,
-                          fit: BoxFit.contain,
-                          //scaledown
-                        ),
-                      )
-                    ),
-                  ),
-                ),
-              )
-
-            ),*/
             Flexible(
               flex: 4,
               child: 
@@ -263,34 +239,6 @@ class _NewItemScreenState extends State<NewItemScreen> {
                                 },
                               )
                             ),                     
-                            /*Flexible(
-                              flex: 5,
-                              child: TextFormField(
-                              //...product quantity
-                                textInputAction: TextInputAction.next,
-                                validator: (val) => val!.isEmpty || (val.length < 3)
-                                  ? "Quantity should be more than 0"
-                                  : null,
-                                focusNode: focus1,
-                                onFieldSubmitted: (v) {
-                                  FocusScope.of(context).requestFocus(focus2);
-                                },
-                                controller: _ItemQtyEditingController,
-                                keyboardType: TextInputType.number,
-                                decoration: const InputDecoration(
-                                  labelText: 'Item Quantity',
-                                  labelStyle: TextStyle(
-                                  ),
-                                  icon: Icon(Icons.ad_units),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      width: 2.0
-                                    ),
-                                  ) 
-                                )
-                              )
-                            ),*/
-
                           ],
                         ),
                         Row(
@@ -417,15 +365,6 @@ class _NewItemScreenState extends State<NewItemScreen> {
     if (pickedFile != null) {
       _image = File(pickedFile.path);
       _cropImage(imageIndex);
-    /*if (pickedFiles != null) {
-    for (int i = 0; i < pickedFiles.length; i++) {
-      if (i < _images.length) {
-        _images[i] = File(pickedFiles[i].path);
-        _cropImage(i);
-      } else {
-        break;
-      }
-    }*/
     } else {
       // ignore: avoid_print
       print('No image selected.');
@@ -540,16 +479,6 @@ class _NewItemScreenState extends State<NewItemScreen> {
         fontSize: 14.0);
       return;
     }
-    /*if (_image == null) {
-      Fluttertoast.showToast(
-        msg: "Please take the product picture",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
-        fontSize: 14.0
-      );
-      return;
-    }*/
 
     for (int i = 0; i < _images.length; i++) {
       if (_images[i] == null) {
@@ -609,32 +538,7 @@ class _NewItemScreenState extends State<NewItemScreen> {
     String itemValue = _itemValueEditingController.text;
     String itemState = _itemStateEditingController.text;
     String itemLocality = _itemLocalEditingController.text;
-    //List<File?> images = _images;
-    /*List<String> base64Images = [];
-    List<String> fileNames = [];*/
     String base64Image = base64Encode(_images[0]!.readAsBytesSync());
-
-    /*FocusScope.of(context).requestFocus(FocusNode());
-    FocusScope.of(context).unfocus();*/
-
-    //String base64Image = base64Encode(_image!.readAsBytesSync());
-    
-    /*List<String> base64Images = [];
-    for (var i = 0; i < _images.length; i++) {
-      var imageBytes = _images[i]!.readAsBytesSync();
-      var base64Image = base64Encode(imageBytes);
-      base64Images.add(base64Image);
-    }*/
-
-   /* for (int i = 0; i < _images.length; i++) {
-      base64Images.add(base64Encode(_images[i]!.readAsBytesSync()));
-      fileNames.add(_images[i]!.path.split("/").last);
-    }*/
-
-    //String imagesJson = jsonEncode(base64Images);
-
-    //for (int i = 0; i < images.length; i++) {
-      //String base64Image = base64Encode(images[i]!.readAsBytesSync());
 
       http.post(Uri.parse("${Config.server}/barterit/php/add_item.php"),
           body: {
@@ -668,39 +572,6 @@ class _NewItemScreenState extends State<NewItemScreen> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (content) => MainScreen(user: widget.user)));
-            
-              //final jsondata = jsonDecode(response.body); //old is var
-              //print("Decoded Response Body: $jsondata");
-              
-              /*if (jsondata['status'] == 'success') {
-                print("line 659");
-                ScaffoldMessenger.of(context)
-                    .showSnackBar(const SnackBar(content: Text("Add Success")));
-              } else {
-                ScaffoldMessenger.of(context)
-                    .showSnackBar(const SnackBar(content: Text("Add Failed")));
-              }
-              Navigator.pop(context);
-            } else {
-              ScaffoldMessenger.of(context)
-                  .showSnackBar(const SnackBar(content: Text("Add Failed")));
-              Navigator.pop(context);
-            }*/
-            //if (jsondata != null && jsondata.containsKey('status')) {
-            /*if (jsonResponse['status'] == 'success') {
-              //final jsonResponse = json.decode(response.body);
-              print("line 681");
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Add Success")));
-              Navigator.pop(context);
-              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (content) => YourItemScreen(user: widget.user)));
-            } else {
-              print("Missing 'status' field in the JSON data.");
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Add Failed")));
-              Navigator.pop(context);
-            }*/
           } else {
             print("HTTP request failed with status code: ${response.statusCode}");
             ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Add Failed")));
