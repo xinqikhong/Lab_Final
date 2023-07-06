@@ -146,7 +146,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         height: 10,
                       ),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Checkbox(
                             //checkColor: Colors.white,
@@ -159,6 +159,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               });
                             },
                           ),
+                          const SizedBox(width: 1),
                           Flexible(
                             child: GestureDetector(
                               onTap: null,
@@ -169,6 +170,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   )),
                             ),
                           ),
+                          const SizedBox(width: 20),
                           MaterialButton(
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(5.0)),

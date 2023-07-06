@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 05, 2023 at 09:03 PM
+-- Generation Time: Jul 06, 2023 at 09:32 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -88,7 +88,9 @@ INSERT INTO `tbl_users` (`user_id`, `user_email`, `user_name`, `user_password`) 
 (10, 'qwe@gmail.com', 'qwe', 'eb377796eef1db1c1c83c9dfbe863feed8d274cc'),
 (11, 'khongxq@gmail.com', 'khongxinqi', 'd0aa1a7f8f64ae619abc1c8b2b1a21ea5adabe38'),
 (12, 'lyq@gmail.com', 'Lim Yu Qi', 'd0aa1a7f8f64ae619abc1c8b2b1a21ea5adabe38'),
-(13, 'tjh@gmail.com', 'Tan Jie Hui', 'd0aa1a7f8f64ae619abc1c8b2b1a21ea5adabe38');
+(13, 'tjh@gmail.com', 'Tan Jie Hui', 'd0aa1a7f8f64ae619abc1c8b2b1a21ea5adabe38'),
+(14, 'john@gmail.com', 'John', 'd0aa1a7f8f64ae619abc1c8b2b1a21ea5adabe38'),
+(15, 'lim@gmail.com', 'Lim', 'd0aa1a7f8f64ae619abc1c8b2b1a21ea5adabe38');
 
 --
 -- Indexes for dumped tables
@@ -120,7 +122,7 @@ ALTER TABLE `tbl_items`
 -- AUTO_INCREMENT for table `tbl_users`
 --
 ALTER TABLE `tbl_users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
