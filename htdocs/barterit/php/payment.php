@@ -20,8 +20,8 @@ $data = array(
           'name' => $name,
           'amount' => ($amount) * 100, // RM20
       'description' => 'Payment for order by '.$name,
-          'callback_url' => SERVER_IP . "/barterit/return_url",
-          'redirect_url' => SERVER_IP . "/barterit/php/payment_update.php?sellerid=$sellerid&userid=$userid&email=$email&name=$name&amount=$amount" 
+          'callback_url' => 'http://10.19.93.145/barterit/php/payment_success.php?email=$email&name=$name&amount=$amount',
+          //'redirect_url' => 'http://10.19.93.145/barterit/php/payment_success.php?email=$email&name=$name&amount=$amount' 
 );
 
 $process = curl_init($host );
@@ -38,4 +38,25 @@ curl_close($process);
 
 $bill = json_decode($return, true);
 header("Location: {$bill['url']}");
+/*if (isset($bill['url'])) {
+    // Payment details received successfully, show a success message
+    echo "<h2>Payment Successful</h2>";
+    echo "<p>Name: $name</p>";
+    echo "<p>Email: $email</p>";
+    echo "<p>Amount Paid: RM $amount</p>";
+    
+    // Provide a "Proceed" button for the user to click and redirect to payment_success.php
+    echo "<button onclick=\"redirectToPaymentSuccess()\">Proceed</button>";
+    
+    // JavaScript function to redirect to payment_success.php after clicking the button
+    echo "<script>
+    function redirectToPaymentSuccess() {
+      window.location.href = 'http://localhost/barterit/php/payment_success.php?email=$email&name=$name&amount=$amount';
+    }
+    </script>";
+} else {
+    // Payment details not received, show an error message or handle the error accordingly
+    echo "<h2>Payment Failed</h2>";
+    // Handle the error case here
+}*/
 ?>

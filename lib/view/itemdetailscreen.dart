@@ -208,7 +208,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
             onPressed: () {
               addtocartdialog();
             },
-            child: const Text("Add to Cart"))
+            child: const Text("Barter It"))
       ]),
     );
   }
@@ -216,12 +216,12 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
   void addtocartdialog() {
     if (widget.user.id.toString() == "na") {
       ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Please register to add item to cart")));
+          const SnackBar(content: Text("Please register to use this function")));
       return;
     }
     if (widget.user.id.toString() == widget.useritem.userId.toString()) {
       Fluttertoast.showToast(
-          msg: "User cannot add own item to cart",
+          msg: "User cannot barter own item",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.CENTER,
           timeInSecForIosWeb: 1,
@@ -237,7 +237,7 @@ class _ItemDetailScreenState extends State<ItemDetailScreen> {
           shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(10.0))),
           title: const Text(
-            "Add to cart?",
+            "Barter It?",
             style: TextStyle(),
           ),
           content: const Text("Are you sure?", style: TextStyle()),

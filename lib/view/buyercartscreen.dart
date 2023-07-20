@@ -1,8 +1,11 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:barterit/model/cart.dart';
 import 'package:barterit/model/config.dart';
+import 'package:barterit/model/order.dart';
 import 'package:barterit/model/user.dart';
 import 'package:barterit/view/billscreen.dart';
+import 'package:barterit/view/mainscreen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -35,7 +38,7 @@ class _BuyerCartScreenState extends State<BuyerCartScreen> {
     screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Your Cart"),
+        title: const Text("Your Barter Cart"),
         //actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.clear))],
       ),
       body: Column(
@@ -181,7 +184,27 @@ class _BuyerCartScreenState extends State<BuyerCartScreen> {
                                         user: widget.user,
                                         totalprice: totalprice,
                                         sellerid: int.parse(cartList[0].sellerId.toString()),
+                                        onPaymentSuccess: () async {
+                                          // Callback function to update cart and order status
+                                          // Put your logic here to update the cart and order status after successful payment
+                                          // For example, you can clear the cart or mark the order as paid
+                                          // Clear the buyer's cart
+                                          
+                                          clearCart();
+                                          //cartList.clear();
+                                          // Navigate back to the main screen after a delay of 2 seconds
+                                          
+                                        },
                                       )));
+                          
+                          
+                          Timer(const Duration(seconds: 2), () {
+                                            Navigator.pushAndRemoveUntil(
+                                              context,
+                                              MaterialPageRoute(builder: (context) => MainScreen(user: widget.user)),
+                                              (Route<dynamic> route) => false,
+                                            );
+                                          });
                           loadcart();
                         },
                         child: const Text("Check Out"))
@@ -191,6 +214,36 @@ class _BuyerCartScreenState extends State<BuyerCartScreen> {
         ],
       ),
     );
+  }
+
+  // Function to clear the cart
+  void clearCart() {
+    if (cartList.isEmpty) {
+      // If the cart list is already empty, no need to send a request
+      return;
+    }
+
+    for (int i = 0; i < cartList.length; i++) {
+      http.post(Uri.parse("${Config.server}/barterit/php/delete_cart.php"),
+          body: {
+            "cartid": cartList[i].cartId,
+          }).then((response) {
+        if (response.statusCode == 200) {
+          var jsondata = jsonDecode(response.body);
+          if (jsondata['status'] == 'success') {
+            // Cart item deleted successfully
+            if (i == cartList.length - 1) {
+              // If this is the last item in the cartList, reload the cart data after all items are deleted
+              loadcart();
+            }
+          } else {
+            // Handle error if deleting cart item fails
+          }
+        } else {
+          // Handle error if response status code is not 200
+        }
+      });
+    }
   }
 
   void loadcart() {
