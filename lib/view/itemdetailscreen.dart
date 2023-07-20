@@ -1,34 +1,39 @@
 import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import '../model/config.dart';
 import '../model/item.dart';
 import '../model/user.dart';
 import 'package:intl/intl.dart';
+typedef CartQtyUpdater = void Function(int newCartQty);
 
-class UserItemScreen extends StatefulWidget {
+class ItemDetailScreen extends StatefulWidget {
   final Item useritem;
   final User user;
-  const UserItemScreen(
-      {super.key, required this.useritem, required this.user});
+  const ItemDetailScreen(
+      {super.key, 
+      required this.useritem, 
+      required this.user,
+      required int page});
 
   @override
-  State<UserItemScreen> createState() => _UserItemScreenState();
+  State<ItemDetailScreen> createState() => _ItemDetailScreenState();
 }
 
-class _UserItemScreenState extends State<UserItemScreen> {
-  /*int qty = 0;
+class _ItemDetailScreenState extends State<ItemDetailScreen> {
+  int qty = 0;
   int userqty = 1;
   double totalprice = 0.0;
-  double singleprice = 0.0;*/
+  double singleprice = 0.0;
 
   @override
   void initState() {
     super.initState();
-    /*qty = int.parse(widget.usercatch.catchQty.toString());
-    totalprice = double.parse(widget.usercatch.catchPrice.toString());
-    singleprice = double.parse(widget.usercatch.catchPrice.toString());*/
+    qty = int.parse(widget.useritem.itemQty.toString());
+    totalprice = double.parse(widget.useritem.itemPrice.toString());
+    singleprice = double.parse(widget.useritem.itemPrice.toString());
   }
 
   final df = DateFormat('dd-MM-yyyy hh:mm a');
@@ -104,7 +109,7 @@ class _UserItemScreenState extends State<UserItemScreen> {
                     ),
                   )
                 ]),*/
-                /*TableRow(children: [
+                TableRow(children: [
                   const TableCell(
                     child: Text(
                       "Quantity Available",
@@ -113,20 +118,20 @@ class _UserItemScreenState extends State<UserItemScreen> {
                   ),
                   TableCell(
                     child: Text(
-                      widget.usercatch.catchQty.toString(),
+                      widget.useritem.itemQty.toString(),
                     ),
                   )
-                ]),*/
+                ]),
                 TableRow(children: [
                   const TableCell(
                     child: Text(
-                      "Value",
+                      "Price",
                       style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ),
                   TableCell(
                     child: Text(
-                      "RM ${double.parse(widget.useritem.itemValue.toString()).toStringAsFixed(2)}",
+                      "RM ${double.parse(widget.useritem.itemPrice.toString()).toStringAsFixed(2)}",
                     ),
                   )
                 ]),
@@ -161,7 +166,7 @@ class _UserItemScreenState extends State<UserItemScreen> {
             ),
           ),
         ),
-        /*Container(
+        Container(
           padding: const EdgeInsets.all(8),
           child:
               Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
@@ -194,24 +199,35 @@ class _UserItemScreenState extends State<UserItemScreen> {
                 },
                 icon: const Icon(Icons.add)),
           ]),
-        ),*/
-        /*Text(
+        ),
+        Text(
           "RM ${totalprice.toStringAsFixed(2)}",
           style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-        ),*/
-        /*ElevatedButton(
+        ),
+        ElevatedButton(
             onPressed: () {
               addtocartdialog();
             },
-            child: const Text("Add to Cart"))*/
+            child: const Text("Add to Cart"))
       ]),
     );
   }
 
-  /*void addtocartdialog() {
-    if (widget.user.id.toString() == widget.usercatch.userId.toString()) {
+  void addtocartdialog() {
+    if (widget.user.id.toString() == "na") {
       ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("User cannot add own item")));
+          const SnackBar(content: Text("Please register to add item to cart")));
+      return;
+    }
+    if (widget.user.id.toString() == widget.useritem.userId.toString()) {
+      Fluttertoast.showToast(
+          msg: "User cannot add own item to cart",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          fontSize: 16.0);
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //     const SnackBar(content: Text("User cannot add own item")));
       return;
     }
     showDialog(
@@ -249,34 +265,47 @@ class _UserItemScreenState extends State<UserItemScreen> {
         );
       },
     );
-  }*/
+  }
 
 //`cart_id`, `catch_id`, `cart_qty`, `cart_price`, `user_id`, `buyer_id`, `cart_date`
-  /*void addtocart() {
-    http.post(Uri.parse("${MyConfig().SERVER}/mynelayan/php/addtocart.php"),
+  void addtocart() {
+    http.post(Uri.parse("${Config.server}/barterit/php/addtocart.php"),
         body: {
-          "catch_id": widget.usercatch.catchId.toString(),
+          "item_id": widget.useritem.itemId.toString(),
           "cart_qty": userqty.toString(),
           "cart_price": totalprice.toString(),
           "userid": widget.user.id,
-          "sellerid": widget.usercatch.userId
+          "sellerid": widget.useritem.userId
         }).then((response) {
-      print(response.body);
       if (response.statusCode == 200) {
         var jsondata = jsonDecode(response.body);
         if (jsondata['status'] == 'success') {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(const SnackBar(content: Text("Success")));
+          Fluttertoast.showToast(
+              msg: "Success",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 1,
+              fontSize: 16.0);
+          // ScaffoldMessenger.of(context)
+          //     .showSnackBar(const SnackBar(content: Text("Success")));
         } else {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(const SnackBar(content: Text("Failed")));
+          Fluttertoast.showToast(
+              msg: "Failed",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 1,
+              fontSize: 16.0);
         }
         Navigator.pop(context);
       } else {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(const SnackBar(content: Text("Failed")));
+        Fluttertoast.showToast(
+            msg: "Failed",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 1,
+            fontSize: 16.0);
         Navigator.pop(context);
       }
     });
-  }*/
+  }
 }

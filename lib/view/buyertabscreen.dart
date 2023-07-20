@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:barterit/view/useritemscreen.dart';
+import 'package:barterit/view/buyercartscreen.dart';
+import 'package:barterit/view/buyerorderscreen.dart';
+import 'package:barterit/view/itemdetailscreen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -9,16 +11,16 @@ import '../model/config.dart';
 import '../model/item.dart';
 import '../model/user.dart';
 
-class AllItemScreen extends StatefulWidget {
+class BuyerTabScreen extends StatefulWidget {
   final User user;
-  const AllItemScreen({super.key, required this.user});
+  const BuyerTabScreen({super.key, required this.user});
 
   @override
-  State<AllItemScreen> createState() => _AllItemScreenState();
+  State<BuyerTabScreen> createState() => _BuyerTabScreenState();
 }
 
-class _AllItemScreenState extends State<AllItemScreen> {
-  String maintitle = "All Item";
+class _BuyerTabScreenState extends State<BuyerTabScreen> {
+  String maintitle = "Buyer";
   List <Item> itemList = <Item>[];
   //List itemlist = [];
   String titlecenter = "Loading data...";
@@ -27,6 +29,7 @@ class _AllItemScreenState extends State<AllItemScreen> {
   int numofpage = 1, curpage = 1;
   int numberofresult = 0;
   var color;
+  int cartqty = 0;
   //final df = DateFormat('dd/MM/yyyy hh:mm a');
 
   TextEditingController searchController = TextEditingController();
@@ -34,13 +37,13 @@ class _AllItemScreenState extends State<AllItemScreen> {
   @override
   void initState() {
     super.initState();
-    loadAllItems(1);
+    print("User ID: ${widget.user.id}");
+    loadItems();
   }
 
   @override
   void dispose() {
     super.dispose();
-    print("dispose");
   }
 
   @override
@@ -56,11 +59,66 @@ class _AllItemScreenState extends State<AllItemScreen> {
        appBar: AppBar(
         title: Text(maintitle),
         actions: [
-          IconButton(
-              onPressed: () {
-                showsearchDialog();
-              },
-              icon: const Icon(Icons.search)),
+          Row(
+            children: [
+              IconButton(
+                  onPressed: () {
+                    showsearchDialog();
+                  },
+                  icon: const Icon(Icons.search)),
+              TextButton.icon(
+                icon: const Icon(
+                  Icons.shopping_cart, color: Colors.white
+                ),
+                label: Text(cartqty.toString(), style: const TextStyle(color: Colors.white),), // Your text here
+                onPressed: () async {
+                  if (cartqty > 0) {
+                    await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (content) => BuyerCartScreen(
+                                  user: widget.user,
+                                )));
+                    loadItems();
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text("No item in cart")));
+                  }
+                },
+              ),
+              PopupMenuButton(
+                  // add icon, by default "3 dot" icon
+                  // icon: Icon(Icons.book)
+                  itemBuilder: (context) {
+                return [
+                  const PopupMenuItem<int>(
+                    value: 0,
+                    child: Text("My Order"),
+                  ),
+                  const PopupMenuItem<int>(
+                    value: 1,
+                    child: Text("New"),
+                  ),
+                ];
+              }, onSelected: (value) async {
+                if (value == 0) {
+                  if (widget.user.id.toString() == "na") {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text("Please login/register an account")));
+                    return;
+                  }
+                  await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (content) => BuyerOrderScreen(
+                                user: widget.user,
+                              )));
+                } else if (value == 1) {
+                } else if (value == 2) {}
+              }),
+            ],
+          ),
+          
         ],
       ),
       body: itemList.isEmpty
@@ -99,11 +157,12 @@ class _AllItemScreenState extends State<AllItemScreen> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (content) =>
-                                            UserItemScreen(
+                                            ItemDetailScreen(
                                               user: widget.user,
-                                              useritem: useritem,
+                                              useritem: useritem, page: curpage,
                                             )));
-                                loadAllItems(1);
+                                //loadAllItems(1);
+                                loadItems();
                               },
                           child: Column(
                             children: [
@@ -121,18 +180,22 @@ class _AllItemScreenState extends State<AllItemScreen> {
                                   itemList[index].itemName.toString(),
                                   style: const TextStyle(fontSize: 20),
                                 ),
+                                const SizedBox(
+                                    height: 3
+                                  ),
                                 Text(
-                                  "RM ${double.parse(itemList[index].itemValue.toString()).toStringAsFixed(2)}",
+                                  "RM ${double.parse(itemList[index].itemPrice.toString()).toStringAsFixed(2)}",
                                   style: const TextStyle(fontSize: 14),
                                 ),
-                                /*Text(
-                                  "${catchList[index].catchQty} available",
-                                  style: const TextStyle(fontSize: 14),
-                                ),*/
                                 Text(
+                                  "${itemList[index].itemQty} in stock",
+                                  style: const TextStyle(fontSize: 14),
+                                ),
+
+                                /*Text(
                                   "${itemList[index].itemLocal.toString()}, ${itemList[index].itemState.toString()}",
                                   style: const TextStyle(fontSize: 14),
-                                ),
+                                ),*/
                               ]
                           ),
                         ),
@@ -157,7 +220,8 @@ class _AllItemScreenState extends State<AllItemScreen> {
                     return TextButton(
                         onPressed: () {
                           curpage = index + 1;
-                          loadAllItems(index + 1);
+                          //loadAllItems(index + 1);
+                          loadItems();
                         },
                         child: Text(
                           (index + 1).toString(),
@@ -188,7 +252,7 @@ class _AllItemScreenState extends State<AllItemScreen> {
     }
   }
 
-  void loadAllItems(int pg) {
+  /*void loadAllItems(int pg) {
     http.post(Uri.parse("${Config.server}/barterit/php/load_item.php"),
         body: {
           "cartuserid": widget.user.id,
@@ -211,6 +275,40 @@ class _AllItemScreenState extends State<AllItemScreen> {
             print(itemList[0].itemName);
           }
           setState(() {});
+        }
+      }
+    );
+  }*/
+
+  void loadItems() {
+    http.post(Uri.parse("${Config.server}/barterit/php/load_item.php"),
+        body: {
+          "cartuserid": widget.user.id,
+          "pageno": curpage.toString()
+        }).then((response) {
+        itemList.clear();
+        if (response.statusCode == 200) {
+          var jsondata = jsonDecode(response.body);
+          print('Response Body: $jsondata'); 
+          if (jsondata['status'] == "success") {
+            numofpage = int.parse(jsondata['numofpage']); //get number of pages
+            numberofresult = int.parse(jsondata['numberofresult']);
+            var extractdata = jsondata['data'];
+            //cartqty = int.parse(jsondata['cartqty'].toString());
+            if (jsondata['cartqty'] == "na") {
+              cartqty = 0; // Set a default value when cartqty is "na"
+            } else {
+              cartqty = int.parse(jsondata['cartqty'].toString(), onError: (_) => 0);
+            }
+            extractdata['items'].forEach((v) {
+              itemList.add(Item.fromJson(v));
+            });
+          }
+          setState(() {});
+        } else {
+          // Add additional error handling here if needed
+          print('Request failed with status code: ${response.statusCode}');
+          print('Response Body: ${response.body}');
         }
       }
     );
@@ -286,4 +384,12 @@ class _AllItemScreenState extends State<AllItemScreen> {
       }
     });
   }
+
+  void updateCartQty(int newCartQty) {
+    print("Updating cart quantity to: $newCartQty");
+    setState(() {
+      cartqty = newCartQty;
+    });
+  }
+
 }

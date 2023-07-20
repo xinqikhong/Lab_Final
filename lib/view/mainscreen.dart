@@ -1,8 +1,8 @@
 import 'package:barterit/view/profiletabscreen.dart';
-import 'package:barterit/view/youritemscreen.dart';
 import 'package:flutter/material.dart';
 import '../model/user.dart';
-import 'allitemscreen.dart';
+import 'sellertabscreen.dart';
+import 'buyertabscreen.dart';
 
 //for buyer screen
 
@@ -17,7 +17,7 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   late List<Widget> tabchildren;
   int _currentIndex = 0;
-  String maintitle = "All Item";
+  String maintitle = "Buyer";
 
   @override
   void initState() {
@@ -25,8 +25,8 @@ class _MainScreenState extends State<MainScreen> {
     print(widget.user.name);
     print("Mainscreen");
     tabchildren = [
-      AllItemScreen(user: widget.user),
-      YourItemScreen(user: widget.user),
+      BuyerTabScreen(user: widget.user),
+      SellerTabScreen(user: widget.user),
       ProfileTabScreen(user: widget.user),
     ];
   }
@@ -50,12 +50,12 @@ class _MainScreenState extends State<MainScreen> {
                 icon: Icon(
                   Icons.shopping_bag_rounded,
                 ),
-                label: "All Item"),
+                label: "Buyer"),
             BottomNavigationBarItem(
                 icon: Icon(
                   Icons.upload_file_rounded,
                 ),
-                label: "Owner"),
+                label: "Seller"),
             BottomNavigationBarItem(
                 icon: Icon(
                   Icons.person,
@@ -69,10 +69,10 @@ class _MainScreenState extends State<MainScreen> {
     setState(() {
       _currentIndex = value;
       if (_currentIndex == 0) {
-        maintitle = "All Item";
+        maintitle = "Buyer";
       }
       if (_currentIndex == 1) {
-        maintitle = "Owner";
+        maintitle = "Seller";
       }
       if (_currentIndex == 2) {
         maintitle = "Profile";

@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:barterit/view/youritemscreen.dart';
+import 'package:barterit/view/sellertabscreen.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
@@ -36,8 +36,10 @@ class _NewItemScreenState extends State<NewItemScreen> {
       TextEditingController();
   final TextEditingController _itemDescEditingController =
       TextEditingController();
-  final TextEditingController _itemValueEditingController =
+  final TextEditingController _itemPriceEditingController =
       TextEditingController();
+  final TextEditingController _itemQtyEditingController =
+      TextEditingController();    
   final TextEditingController _itemStateEditingController =
       TextEditingController();
   final TextEditingController _itemLocalEditingController =
@@ -203,19 +205,19 @@ class _NewItemScreenState extends State<NewItemScreen> {
                             Flexible(
                               flex: 5,
                               child: TextFormField(
-                              //...product value
-                                textInputAction: TextInputAction.done,
+                              //...product price
+                                textInputAction: TextInputAction.next,
                                 validator: (val) => val!.isEmpty /*|| (val.length < 3)*/
-                                  ? "Product value must contain value"
+                                  ? "Product price must contain value"
                                   : null,
                                 focusNode: focus1,
-                                /*onFieldSubmitted: (v) {
-                                  FocusScope.of(context).requestFocus(focus2);
-                                },*/
-                                controller: _itemValueEditingController,
+                                onFieldSubmitted: (v) {
+                                      FocusScope.of(context).requestFocus(focus2);
+                                },
+                                controller: _itemPriceEditingController,
                                 keyboardType: TextInputType.number,
                                 decoration: const InputDecoration(
-                                  labelText: 'Item Value (RM)',
+                                  labelText: 'Item Price (RM)',
                                   labelStyle: TextStyle(
                                   ),
                                   icon: Icon(Icons.money),
@@ -229,6 +231,30 @@ class _NewItemScreenState extends State<NewItemScreen> {
                             ),
                             Flexible(
                               flex: 5,
+                              child: TextFormField(
+                              //...product quantity
+                                textInputAction: TextInputAction.done,
+                                validator: (val) => val!.isEmpty 
+                                  ? "Quantity should be more than 0"
+                                  : null,
+                                focusNode: focus2,
+                                controller: _itemQtyEditingController,
+                                keyboardType: TextInputType.number,
+                                decoration: const InputDecoration(
+                                  labelText: 'Item Quantity',
+                                  labelStyle: TextStyle(
+                                  ),
+                                  icon: Icon(Icons.ad_units),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      width: 2.0
+                                    ),
+                                  )
+                                )
+                              )
+                            ),
+                            /*Flexible(
+                              flex: 5,
                               child: CheckboxListTile(
                                 title: const Text("Lawfull Item?"), //    <‐‐ label
                                 value: _isChecked,
@@ -238,7 +264,7 @@ class _NewItemScreenState extends State<NewItemScreen> {
                                   });
                                 },
                               )
-                            ),                     
+                            ),*/                     
                           ],
                         ),
                         Row(
@@ -535,7 +561,8 @@ class _NewItemScreenState extends State<NewItemScreen> {
   void addNewItem() {
     String itemName = _itemNameEditingController.text;
     String itemDesc = _itemDescEditingController.text;
-    String itemValue = _itemValueEditingController.text;
+    String itemPrice = _itemPriceEditingController.text;
+    String itemQty = _itemQtyEditingController.text;
     String itemState = _itemStateEditingController.text;
     String itemLocality = _itemLocalEditingController.text;
     String base64Image = base64Encode(_images[0]!.readAsBytesSync());
@@ -545,7 +572,8 @@ class _NewItemScreenState extends State<NewItemScreen> {
             "userid": widget.user.id.toString(),
             "itemName": itemName,
             "itemDesc": itemDesc,
-            "itemValue": itemValue,
+            "itemPrice": itemPrice,
+            "itemQty": itemQty,
             "state": itemState,
             "locality": itemLocality,
             "latitude": itemlat,

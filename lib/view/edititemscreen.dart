@@ -29,7 +29,9 @@ class _EditItemScreenState extends State<EditItemScreen> {
       TextEditingController();
   final TextEditingController _itemDescEditingController =
       TextEditingController();
-  final TextEditingController _itemValueEditingController =
+  final TextEditingController _itemPriceEditingController =
+      TextEditingController();
+  final TextEditingController _itemQtyEditingController =
       TextEditingController();
   final TextEditingController _itemStateEditingController =
       TextEditingController();
@@ -46,8 +48,10 @@ class _EditItemScreenState extends State<EditItemScreen> {
     super.initState();
     _itemNameEditingController.text = widget.useritem.itemName.toString();
     _itemDescEditingController.text = widget.useritem.itemDesc.toString();
-    _itemValueEditingController.text =
-        double.parse(widget.useritem.itemValue.toString()).toStringAsFixed(2);
+    _itemPriceEditingController.text =
+        double.parse(widget.useritem.itemPrice.toString()).toStringAsFixed(2);
+    _itemQtyEditingController.text =
+        double.parse(widget.useritem.itemQty.toString()).toStringAsFixed(0);
     _itemStateEditingController.text = widget.useritem.itemState.toString();
     _itemLocalEditingController.text = widget.useritem.itemLocal.toString();
   }
@@ -141,15 +145,33 @@ class _EditItemScreenState extends State<EditItemScreen> {
                           child: TextFormField(
                               textInputAction: TextInputAction.next,
                               validator: (val) => val!.isEmpty
-                                  ? "Product value must contain value"
+                                  ? "Product price must contain value"
                                   : null,
                               onFieldSubmitted: (v) {},
-                              controller: _itemValueEditingController,
+                              controller: _itemPriceEditingController,
                               keyboardType: TextInputType.number,
                               decoration: const InputDecoration(
-                                  labelText: 'Item Value',
+                                  labelText: 'Item Price',
                                   labelStyle: TextStyle(),
                                   icon: Icon(Icons.money),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(width: 2.0),
+                                  ))),
+                        ),
+                        Flexible(
+                          flex: 5,
+                          child: TextFormField(
+                              textInputAction: TextInputAction.done,
+                              validator: (val) => val!.isEmpty || (val.length < 3)
+                                  ? "Quantity should be more than 0"
+                                  : null,
+                              onFieldSubmitted: (v) {},
+                              controller: _itemQtyEditingController,
+                              keyboardType: TextInputType.number,
+                              decoration: const InputDecoration(
+                                  labelText: 'Item Quantity',
+                                  labelStyle: TextStyle(),
+                                  icon: Icon(Icons.ad_units),
                                   focusedBorder: OutlineInputBorder(
                                     borderSide: BorderSide(width: 2.0),
                                   ))),
@@ -264,14 +286,16 @@ class _EditItemScreenState extends State<EditItemScreen> {
   void updateItem() {
     String itemname = _itemNameEditingController.text;
     String itemdesc = _itemDescEditingController.text;
-    String itemprice = _itemValueEditingController.text;
+    String itemprice = _itemPriceEditingController.text;
+    String itemqty = _itemQtyEditingController.text;
 
     http.post(Uri.parse("${Config.server}/barterit/php/update_item.php"),
         body: {
           "itemid": widget.useritem.itemId,
           "itemname": itemname,
           "itemdesc": itemdesc,
-          "itemvalue": itemprice,
+          "itemprice": itemprice,
+          "itemqty": itemqty,
         }).then((response) {
       print(response.body);
       if (response.statusCode == 200) {

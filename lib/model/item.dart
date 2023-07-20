@@ -3,7 +3,8 @@ class Item {
   String? userId;
   String? itemName;
   String? itemDesc;
-  String? itemValue;
+  String? itemPrice;
+  String? itemQty;
   String? itemState;
   String? itemLocal;
   String? itemlat;
@@ -15,7 +16,8 @@ class Item {
       required this.userId,
       required this.itemName,
       required this.itemDesc,
-      required this.itemValue,
+      required this.itemPrice,
+      required this.itemQty,
       required this.itemState,
       required this.itemLocal,
       required this.itemlat,
@@ -28,7 +30,8 @@ class Item {
     userId = json['user_id'];
     itemName = json['item_name'];
     itemDesc = json['item_desc'];
-    itemValue = json['item_value'];
+    itemPrice = json['item_price'];
+    itemQty = json['item_qty'];
     itemState = json['item_state'];
     itemLocal = json['item_local'];
     itemlat = json['item_lat'];
@@ -42,7 +45,8 @@ class Item {
     data['user_id'] = userId;
     data['item_name'] = itemName;
     data['item_desc'] = itemDesc;
-    data['item_value'] = itemValue;
+    data['item_price'] = itemPrice;
+    data['item_qty'] = itemQty;
     data['item_state'] = itemState;
     data['item_local'] = itemLocal;
     data['item_lat'] = itemlat;

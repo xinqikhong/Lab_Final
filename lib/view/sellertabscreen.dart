@@ -11,20 +11,20 @@ import 'package:http/http.dart' as http;
 import 'edititemscreen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-class YourItemScreen extends StatefulWidget {
+class SellerTabScreen extends StatefulWidget {
   final User user;
-  const YourItemScreen({Key? key, required this.user}) : super(key: key);
+  const SellerTabScreen({Key? key, required this.user}) : super(key: key);
 
   @override
-  State<YourItemScreen> createState() => _YourItemScreenState();
+  State<SellerTabScreen> createState() => _SellerTabScreenState();
 }
 
-class _YourItemScreenState extends State<YourItemScreen> {
+class _SellerTabScreenState extends State<SellerTabScreen> {
   late double screenHeight, screenWidth;
   late int axiscount = 2;
   late List<Widget> tabchildren;
   List<Item> itemList = <Item>[];
-  String maintitle = "Owner";
+  String maintitle = "Seller";
   int numofpage = 1, curpage = 1;
   int numberofresult = 0;
   var color;
@@ -55,7 +55,12 @@ class _YourItemScreenState extends State<YourItemScreen> {
       ),
       body: itemList.isEmpty
             ? const Center(
-              child: Text('No Data'),
+                child: Text('No Data',
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             )
             : Column (
                 children: [
@@ -113,16 +118,21 @@ class _YourItemScreenState extends State<YourItemScreen> {
                                     style: const TextStyle(fontSize: 20),
                                   ),
                                   const SizedBox(
-                                    height: 5
+                                    height: 3
                                   ),
                                   Text(
-                                    "RM ${double.parse(itemList[index].itemValue.toString()).toStringAsFixed(2)}",
+                                    "RM ${double.parse(itemList[index].itemPrice.toString()).toStringAsFixed(2)}",
                                     style: const TextStyle(fontSize: 14),
                                   ),
                                   Text(
+                                    "${itemList[index].itemQty} in stock",
+                                    style: const TextStyle(fontSize: 14),
+                                  ),
+
+                                  /*Text(
                                     "${itemList[index].itemLocal.toString()}, ${itemList[index].itemState.toString()}",
                                     style: const TextStyle(fontSize: 14),
-                                  ),
+                                  ),*/
                                 ]
                               ),
                             ),
