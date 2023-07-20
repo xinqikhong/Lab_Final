@@ -7,13 +7,12 @@ if (!isset($_POST)) {
 
 include_once("dbconnect.php");
 
-$itemid = $_POST['itemid'];
-$item_name = $_POST['itemname'];
-$item_desc = addslashes($_POST['itemdesc']);
-$item_price = $_POST['itemprice'];
-$item_qty = $_POST['itemqty'];
+$orderid = $_POST['orderid'];
+$status = $_POST['status'];
+$lat = $_POST['lat'];
+$lng = $_POST['lng'];
 
-$sqlupdate = "UPDATE `tbl_item` SET `item_name`='$item_name',`item_desc`='$item_desc',`item_price`='$item_price',`item_qty`='$item_qty' WHERE `item_id` = '$itemid'";
+$sqlupdate = "UPDATE `tbl_orders` SET `order_status`='$status', `order_lng` = '$lng', `order_lat` = '$lat' WHERE order_id = '$orderid'";
 
 if ($conn->query($sqlupdate) === TRUE) {
 	$response = array('status' => 'success', 'data' => null);

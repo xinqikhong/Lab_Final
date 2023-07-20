@@ -22,7 +22,7 @@ $user_name = filter_var($name, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 $user_password = password_hash($password, PASSWORD_DEFAULT);
 */
 
-$sqlinsert = "INSERT INTO tbl_users (user_email, user_name , user_password) VALUES('$email','$name','$password')";
+$sqlinsert = "INSERT INTO tbl_user (user_email, user_name , user_password) VALUES('$email','$name','$password')";
 if ($conn->query($sqlinsert) === TRUE) {
     $response = array('status' => 'success', 'data' => null);
     sendEmail($email);

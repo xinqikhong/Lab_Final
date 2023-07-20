@@ -11,7 +11,7 @@ $userid = $_POST['userid'];
 $itemid = $_POST['itemid'];
 
 
-$sqldelete = "DELETE FROM `tbl_items` WHERE `item_id` = '$itemid'";
+$sqldelete = "DELETE FROM `tbl_item` WHERE `item_id` = '$itemid'";
 
 if ($conn->query($sqldelete) === TRUE) {
 	$response = array('status' => 'success', 'data' => null);

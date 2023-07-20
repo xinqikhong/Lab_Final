@@ -7,15 +7,11 @@ if (!isset($_POST)) {
 
 include_once("dbconnect.php");
 
-$itemid = $_POST['itemid'];
-$item_name = $_POST['itemname'];
-$item_desc = addslashes($_POST['itemdesc']);
-$item_price = $_POST['itemprice'];
-$item_qty = $_POST['itemqty'];
+$cartid = $_POST['cartid'];
 
-$sqlupdate = "UPDATE `tbl_item` SET `item_name`='$item_name',`item_desc`='$item_desc',`item_price`='$item_price',`item_qty`='$item_qty' WHERE `item_id` = '$itemid'";
+$sqldeletecart = "DELETE FROM `tbl_carts` WHERE `cart_id` = '$cartid'";
 
-if ($conn->query($sqlupdate) === TRUE) {
+if ($conn->query($sqldeletecart) === TRUE) {
 	$response = array('status' => 'success', 'data' => null);
     sendJsonResponse($response);
 }else{

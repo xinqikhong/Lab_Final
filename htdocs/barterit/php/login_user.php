@@ -14,9 +14,10 @@ echo "Email: " . $email . "<br>";
 echo "Password: " . $password . "<br>";
 */
 
-$sqllogin = "SELECT * FROM tbl_users WHERE user_email = '$email' AND
+$sqllogin = "SELECT * FROM tbl_user WHERE user_email = '$email' AND
 user_password = '$password'";
 $result = $conn->query($sqllogin);
+
 if ($result->num_rows > 0) {
 while ($row = $result->fetch_assoc()) {
         $userlist = array();

@@ -12,14 +12,15 @@ include_once("dbconnect.php");
 $user_id = $_POST['userid'];
 $item_name = $_POST['itemName'];
 $item_desc = $_POST['itemDesc'];
-$item_value = $_POST['itemValue'];
+$item_price = $_POST['itemPrice'];
+$item_qty = $_POST['itemQty'];
 $item_state = $_POST['state'];
 $item_local = $_POST['locality'];
 $item_lat = $_POST['latitude'];
 $item_long = $_POST['longitude'];
 $image = $_POST['image'];
 
-$sqlinsert = "INSERT INTO `tbl_items`(`item_owner`,`item_name`, `item_desc`, `item_value`, `item_state`,`item_local`,`item_lat`, `item_long`) VALUES ('$user_id','$item_name','$item_desc','$item_value','$item_state','$item_local','$item_lat','$item_long')";
+$sqlinsert = "INSERT INTO `tbl_item`(`user_id`,`item_name`, `item_desc`, `item_price`, `item_qty`,`item_state`,`item_local`,`item_lat`, `item_long`) VALUES ('$user_id','$item_name','$item_desc','$item_price','$item_qty','$item_state','$item_local','$item_lat','$item_long')";
 
 if ($conn->query($sqlinsert) === TRUE) {
 	$filename = mysqli_insert_id($conn);
