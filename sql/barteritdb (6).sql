@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 20, 2023 at 02:15 PM
+-- Generation Time: Jul 20, 2023 at 09:40 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -37,13 +37,6 @@ CREATE TABLE `tbl_carts` (
   `cart_date` datetime(6) NOT NULL DEFAULT current_timestamp(6)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `tbl_carts`
---
-
-INSERT INTO `tbl_carts` (`cart_id`, `item_id`, `cart_qty`, `cart_price`, `user_id`, `seller_id`, `cart_date`) VALUES
-(9, '30', 2, 20, '11', '10', '2023-07-20 12:42:54.630516');
-
 -- --------------------------------------------------------
 
 --
@@ -69,7 +62,20 @@ CREATE TABLE `tbl_item` (
 --
 
 INSERT INTO `tbl_item` (`item_id`, `user_id`, `item_name`, `item_desc`, `item_price`, `item_qty`, `item_lat`, `item_long`, `item_state`, `item_local`, `item_date`) VALUES
-(30, 10, 'Baseball Cap Boy', 'Colour: Grey', '10', '10', '37.4219983', '-122.084', 'California', 'Mountain View', '2023-07-20 05:54:09.354415');
+(30, 10, 'Sport Watch', 'Colour: Grey', '10', '10', '37.4219983', '-122.084', 'California', 'Mountain View', '2023-07-20 05:54:09.354415'),
+(32, 10, 'Storybook', 'Colour: Brown', '25', '3', '37.4219983', '-122.084', 'California', 'Mountain View', '2023-07-21 02:02:07.019681'),
+(53, 10, 'Men Wallet', 'abgggggsasasasas', '30', '6', '37.4219983', '-122.084', 'California', 'Mountain View', '2023-07-21 02:26:07.692027'),
+(54, 10, 'Girl School Bag', 'Colour: Pink', '30', '10', '37.4219983', '-122.084', 'California', 'Mountain View', '2023-07-21 02:27:14.695651'),
+(55, 10, 'Men White Shoes', 'Size: 40, Men, White', '45', '5', '37.4219983', '-122.084', 'California', 'Mountain View', '2023-07-21 02:28:49.180665'),
+(56, 10, 'Round Table', 'Colour: Brown', '50', '2', '37.4219983', '-122.084', 'California', 'Mountain View', '2023-07-21 02:29:44.402519'),
+(57, 11, 'Women Long Pant', 'Colour: Black', '20', '3', '37.4219983', '-122.084', 'California', 'Mountain View', '2023-07-21 02:31:47.606434'),
+(58, 11, 'Child Story Book', 'Go To Zoo Story Book', '30', '10', '37.4219983', '-122.084', 'California', 'Mountain View', '2023-07-21 02:32:48.792086'),
+(59, 11, 'Iron', 'Colour: Blue', '25', '5', '37.4219983', '-122.084', 'California', 'Mountain View', '2023-07-21 02:40:12.715540'),
+(60, 11, 'Girl Shoes', 'Colour: Pink', '15', '3', '37.4219983', '-122.084', 'California', 'Mountain View', '2023-07-21 02:40:59.977236'),
+(61, 11, 'iPhone 13 Pro', 'Colour: Black, Silver', '1000', '2', '37.4219983', '-122.084', 'California', 'Mountain View', '2023-07-21 02:42:27.734891'),
+(62, 11, 'Mini Multi Cooker', 'Colour: Green', '26', '6', '37.4219983', '-122.084', 'California', 'Mountain View', '2023-07-21 02:44:02.629982'),
+(63, 11, 'Jogging Shoes', 'Colour: Blue', '40', '2', '37.4219983', '-122.084', 'California', 'Mountain View', '2023-07-21 02:45:09.206444'),
+(64, 11, 'iPhone 12 ', 'Colour: Gold', '800', '3', '37.4219983', '-122.084', 'California', 'Mountain View', '2023-07-21 02:46:16.866208');
 
 -- --------------------------------------------------------
 
@@ -126,7 +132,8 @@ CREATE TABLE `tbl_user` (
 
 INSERT INTO `tbl_user` (`user_id`, `user_email`, `user_name`, `user_password`, `user_datereg`) VALUES
 (10, 'khong@gmail.com', 'Khong', 'd0aa1a7f8f64ae619abc1c8b2b1a21ea5adabe38', '2023-07-20 04:57:02.874420'),
-(11, 'khong2@gmail.com', 'Khong2', 'd0aa1a7f8f64ae619abc1c8b2b1a21ea5adabe38', '2023-07-20 12:42:38.951794');
+(11, 'khong2@gmail.com', 'khong2', 'd0aa1a7f8f64ae619abc1c8b2b1a21ea5adabe38', '2023-07-20 12:42:38.951794'),
+(12, 'khong3@gmail.com', 'Khong Xin Qi', 'd0aa1a7f8f64ae619abc1c8b2b1a21ea5adabe38', '2023-07-21 03:22:21.172376');
 
 --
 -- Indexes for dumped tables
@@ -171,13 +178,13 @@ ALTER TABLE `tbl_user`
 -- AUTO_INCREMENT for table `tbl_carts`
 --
 ALTER TABLE `tbl_carts`
-  MODIFY `cart_id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `cart_id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT for table `tbl_item`
 --
 ALTER TABLE `tbl_item`
-  MODIFY `item_id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `item_id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=65;
 
 --
 -- AUTO_INCREMENT for table `tbl_orderdetails`
@@ -195,7 +202,7 @@ ALTER TABLE `tbl_orders`
 -- AUTO_INCREMENT for table `tbl_user`
 --
 ALTER TABLE `tbl_user`
-  MODIFY `user_id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `user_id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
